@@ -1,0 +1,37 @@
+# action.yml
+name: "SharePoint Online Copy"
+description: "Creates a zip file of the current repository and copies it to a given SharePoint Online directory."
+author: "John Fabry"
+branding:
+  color: "purple"
+inputs:
+  spobkp_authority:
+    description: "O365 tenant authority"
+    required: true
+  spobkp_endpoint:
+    description: "SharePoint endpoint to target for file upload"
+    required: true
+  spobkp_scope:
+    description: "Graph API scope."
+    required: true
+    default: "https://graph.microsoft.com/.default"
+  spobkp_clientid:
+    description: "O365 Graph API client ID"
+    required: true
+  spobkp_secret:
+    description: "O365 Graph API client secret"
+    required: true
+  debug:
+    description: "Whether or not to enable debug logging"
+    required: true
+    default: "false"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    SPOBKP_AUTHORITY: ${{ inputs.spobkp_authority }}
+    SPOBKP_ENDPOINT: ${{ inputs.spobkp_endpoint }}
+    SPOBKP_SCOPE: ${{ inputs. spobkp_scope }}
+    SPOBKP_CLIENTID: ${{ inputs.spobkp_clientid }}
+    SPOBKP_SECRET: ${{ inputs.spobkp_secret }}
+    DEBUG: ${{ inputs.debug }}
