@@ -21,6 +21,10 @@ inputs:
   spobkp_secret:
     description: "O365 Graph API client secret"
     required: true
+  archive_prefix:
+    description: "Prefix for the archive file"
+    required: true
+    default: "spo_action"
   debug:
     description: "Whether or not to enable debug logging"
     required: true
@@ -31,7 +35,8 @@ runs:
   env:
     SPOBKP_AUTHORITY: ${{ inputs.spobkp_authority }}
     SPOBKP_ENDPOINT: ${{ inputs.spobkp_endpoint }}
-    SPOBKP_SCOPE: ${{ inputs. spobkp_scope }}
+    SPOBKP_SCOPE: ${{ inputs.spobkp_scope }}
     SPOBKP_CLIENTID: ${{ inputs.spobkp_clientid }}
     SPOBKP_SECRET: ${{ inputs.spobkp_secret }}
     DEBUG: ${{ inputs.debug }}
+    ARCHIVE_PREFIX: ${{ inputs.archive_prefix }}

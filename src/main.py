@@ -13,6 +13,8 @@ from datetime import datetime
 from spo_controller import SpoController
 
 
+ARCHIVE_BASE: str = "/tmp/archive/"
+
 logger: logging.Logger = logging.getLogger()
 format_string: str = "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
 log_format: logging.Formatter = logging.Formatter(format_string)
@@ -85,6 +87,17 @@ def check_debug() -> None:
         logger.setLevel(logging.DEBUG)
 
 
+def validate_dir(dir_path: str) -> None:
+    """
+    Ensures the given directory exists.
+
+    Args:
+        dir_path (str): Path to check.
+    """
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+
 def main() -> None:
     """
     Entrypoint.
@@ -92,16 +105,19 @@ def main() -> None:
     check_debug()
 
     file_path: str = os.environ.get("GITHUB_WORKSPACE", "./")
-    logger.info("File path is: %s", file_path)
-
-    name_base: str = os.environ.get("file_name", "dashboard_scripts")
-    archive_name: str = f"{name_base}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
     if not file_path.endswith("/"):
         file_path = f"{file_path}/"
-    archive_path: str = f"{file_path}{archive_name}"
+    logger.info("File path is: %s", file_path)
+
+    logger.debug("Validating archive storage directory at: %s", ARCHIVE_BASE)
+    validate_dir(ARCHIVE_BASE)
+
+    name_base: str = os.environ.get("ARCHIVE_PREFIX", "repo")
+    archive_name: str = f"{name_base}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    archive_path: str = f"{ARCHIVE_BASE}{archive_name}"
 
     shutil.make_archive(archive_path, "zip", file_path)
-    logger.info("Archive created.")
+    logger.info("Archive created at: %s", archive_path)
 
     archive_name = f"{archive_name}.zip"
     archive_path = f"{archive_path}.zip"
